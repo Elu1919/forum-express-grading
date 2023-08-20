@@ -6,7 +6,7 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const bodyParser = require('body-parser')
 const passport = require('./config/passport')
-const routes = require('./routes')
+const { pages } = require('./routes')
 const { getUser } = require('./helpers/auth-helpers')
 const handlebarsHelpers = require('./helpers/handlebars-helpers')
 
@@ -44,7 +44,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(routes)
+app.use(pages)
 
 app.listen(port, () => {
   console.info(`Example app listening on port ${port}!`)
