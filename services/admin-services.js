@@ -1,4 +1,4 @@
-const { Restaurant, Category } = require('../models')
+const { Restaurant, Category, User } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const adminServices = {
@@ -93,6 +93,31 @@ const adminServices = {
       })
       .then(putRestaurant => {
         cb(null, { restaurant: putRestaurant })
+      })
+      .catch(err => cb(err))
+  },
+  getUsers: (req, cb) => {
+    return User.findAll({
+      raw: true
+    })
+      .then(users => cb(null, { users }))
+      .catch(err => cb(err))
+  },
+  patchUser: (req, cb) => {
+    return User.findByPk(req.params.id)
+      .then(user => {
+        if (!user) throw new Error("User didn't exist!")
+        if (user.email === 'root@example.com') {
+          const change = false
+          return cb(null, { user, change })
+        }
+        return user.update({
+          isAdmin: !user.isAdmin
+        })
+      })
+      .then(user => {
+        const change = true
+        return cb(null, { user, change })
       })
       .catch(err => cb(err))
   }
